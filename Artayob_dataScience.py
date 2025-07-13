@@ -91,6 +91,31 @@ def correlation():
     corr = df[['Gross', 'No_of_Votes']].corr(method='pearson')
     print("Correlation between Gross and No_of_Votes:\n", corr)
 
+class Highest_Gross:
+    def __init__(self, df):
+        self.df = df
+
+    def Top_5_Directors(self):
+        df['Gross'] = df['Gross'].replace('[\$,]', '', regex=True) 
+        df['Gross'] = pd.to_numeric(df['Gross'], errors='coerce') 
+        
+        avg_gross_by_director = df.groupby('Director')['Gross'].mean()
+        top_directors = avg_gross_by_director.sort_values(ascending=False)
+        print("Top 5 Directors by Average Gross: \n", top_directors)
+    
+    def Plot_of_top5_directors(self):
+        avg_gross_by_director = df.groupby('Director')['Gross'].mean()
+        top_directors = avg_gross_by_director.sort_values(ascending=False).head(5)
+
+        plt.figure(figsize=(8, 5))
+        top_directors.plot(kind='bar', color='gold')
+        plt.title('Top 5 Directors by Average Gross')
+        plt.xlabel('Director')
+        plt.ylabel('Average Gross (USD)')
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.show()  
+
 
 loadingCSV = df.to_csv("Cleaned_imdb_top_1000.csv", index= False)
 missing_values()
@@ -104,3 +129,6 @@ visualizing.scatter_plot()
 visualizing.Box_plot()
 descriptive_statistics()
 correlation()
+highest = Highest_Gross(df)
+highest.Top_5_Directors()
+highest.Plot_of_top5_directors()
