@@ -44,11 +44,6 @@ def visualizer():
     # plt.show()
 
     # Boxplot: IMDB Rating by Certificate
-    plt.figure(figsize=(10,5))
-    sns.boxplot(data=df, x='Certificate', y='IMDB_Rating')
-    plt.title('IMDB Rating by Certificate')
-    plt.xticks(rotation=45)
-    plt.tight_layout()
-    plt.show()
+
 
 print(visualizer())

@@ -91,13 +91,14 @@ def correlation():
     corr = df[['Gross', 'No_of_Votes']].corr(method='pearson')
     print("Correlation between Gross and No_of_Votes:\n", corr)
 
+df['Gross'] = df['Gross'].replace('[\$,]', '', regex=True) 
+df['Gross'] = pd.to_numeric(df['Gross'], errors='coerce') 
+
 class Highest_Gross:
     def __init__(self, df):
         self.df = df
 
-    def Top_5_Directors(self):
-        df['Gross'] = df['Gross'].replace('[\$,]', '', regex=True) 
-        df['Gross'] = pd.to_numeric(df['Gross'], errors='coerce') 
+    def Top_5_Directors(self): 
         
         avg_gross_by_director = df.groupby('Director')['Gross'].mean()
         top_directors = avg_gross_by_director.sort_values(ascending=False)
@@ -115,6 +116,20 @@ class Highest_Gross:
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.show()  
+    
+class Actor_top_rated:
+    def __init__(self, df):
+        self.df = df
+    
+    def Top_actor(self):
+        top_rated = df[df['IMDB_Rating']> 8.5]
+        top_actor = top_rated['Star1'].value_counts().head(1)
+        print("The top actor is: ", top_actor)
+
+    def Gross_pair(self):
+        df['Actor Pair'] = df['Star1'] + '&' + df['Star2']
+        pair_gross = df.groupby('Actor Pair')['Gross'].mean().sort_values(ascending=False).head(5)
+        print("Top 5 Actor Pairs by Average Gross: \n", pair_gross)
 
 
 loadingCSV = df.to_csv("Cleaned_imdb_top_1000.csv", index= False)
@@ -132,3 +147,6 @@ correlation()
 highest = Highest_Gross(df)
 highest.Top_5_Directors()
 highest.Plot_of_top5_directors()
+highest_actor = Actor_top_rated(df)
+highest_actor.Top_actor()
+highest_actor.Gross_pair()
