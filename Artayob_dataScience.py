@@ -132,6 +132,30 @@ class Actor_top_rated:
         print("Top 5 Actor Pairs by Average Gross: \n", pair_gross)
 
 
+class Genre_preference:
+    def __init__(self, df):
+        self.df = df
+    
+    def genre(self):
+        most_seen = df['Genre'].value_counts().head(5)
+        print("The most seen Genres are: \n", most_seen)
+
+    def heat_map(self):
+        self.df['Genre'] = self.df['Genre'].str.split(', ')
+        df_exploded = self.df.explode('Genre')
+        genre_rating = df_exploded.groupby('Genre')['IMDB_Rating'].mean().reset_index()
+        genre_rating_pivot = genre_rating.pivot_table(index='Genre', values='IMDB_Rating')
+        genre_rating_pivot = genre_rating_pivot.sort_values(by='IMDB_Rating', ascending=False)
+
+        plt.figure(figsize=(10, 8))
+        sns.heatmap(genre_rating_pivot, annot=True, cmap='YlGnBu', linewidths=0.5)
+        plt.title('Average IMDB Rating by Genre')
+        plt.ylabel('Genre')
+        plt.xlabel('IMDB Rating')
+        plt.tight_layout()
+        plt.show()
+ 
+
 loadingCSV = df.to_csv("Cleaned_imdb_top_1000.csv", index= False)
 missing_values()
 print(df.columns.tolist())
@@ -150,3 +174,6 @@ highest.Plot_of_top5_directors()
 highest_actor = Actor_top_rated(df)
 highest_actor.Top_actor()
 highest_actor.Gross_pair()
+preference = Genre_preference(df)
+preference.genre()
+preference.heat_map()
