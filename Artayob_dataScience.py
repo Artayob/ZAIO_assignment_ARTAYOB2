@@ -41,6 +41,7 @@ class Visualizer:
         plt.title('Meta Score Distribution')
         plt.tight_layout()
         plt.show()
+        print("Histogram Showing IMDB Distribution and Meta Score Distribution")
     
     def Bar_plot(self):
         top_genres = df['Genre'].value_counts().nlargest(10) 
@@ -50,6 +51,7 @@ class Visualizer:
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.show()
+        print("Bar plot showing the top 10 genres of movies")
     
     def scatter_plot(self):
         plt.figure(figsize=(10,5))
@@ -57,6 +59,7 @@ class Visualizer:
         plt.title('Gross vs Number of Votes')
         plt.tight_layout()
         plt.show()
+        print("Scatter plot showing Gross vs Number of votes.")
 
     def Box_plot(self):
         plt.figure(figsize=(10,5))
@@ -65,6 +68,9 @@ class Visualizer:
         plt.xticks(rotation=45)
         plt.tight_layout()
         plt.show()
+        print("Box plot showing IMDB Rating by Certificate")
+    print("Insight: Most movies are rated between 7 and 8 on IMDB.")
+
 
 def descriptive_statistics():
 
@@ -85,11 +91,11 @@ def descriptive_statistics():
     print("Descriptive Statistics: \n", stats)
     return stats
 
+
 def correlation():
-    def __init__(self, df):
-        self.df = df
     corr = df[['Gross', 'No_of_Votes']].corr(method='pearson')
     print("Correlation between Gross and No_of_Votes:\n", corr)
+
 
 df['Gross'] = df['Gross'].replace('[\$,]', '', regex=True) 
 df['Gross'] = pd.to_numeric(df['Gross'], errors='coerce') 
