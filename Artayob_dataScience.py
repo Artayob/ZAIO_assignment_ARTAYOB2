@@ -143,8 +143,13 @@ class Genre_preference:
         self.df = df
     
     def genre(self):
-        most_seen = df['Genre'].value_counts().head(5)
-        print("The most seen Genres are: \n", most_seen)
+        df_clean = df.dropna(subset=['Genre', 'IMDB_Rating'])
+        df_clean['Genre'] = df_clean['Genre'].str.split(',')
+        df_exploded = df_clean.explode('Genre')
+
+        df_exploded['Genre'] = df_exploded['Genre'].str.strip()
+        genre_rating = df_exploded.groupby('Genre')['IMDB_Rating'].mean().sort_values(ascending=False)
+        print("The most seen Genres are: \n", genre_rating)
 
     def heat_map(self):
         self.df['Genre'] = self.df['Genre'].str.split(', ')
@@ -162,7 +167,6 @@ class Genre_preference:
         plt.show()
  
 
-loadingCSV = df.to_csv("Cleaned_imdb_top_1000.csv", index= False)
 missing_values()
 print(df.columns.tolist())
 print(remove_duplicates(df))
@@ -183,3 +187,4 @@ highest_actor.Gross_pair()
 preference = Genre_preference(df)
 preference.genre()
 preference.heat_map()
+loadingCSV = df.to_csv("Cleaned_imdb_top_1000.csv", index= True)
